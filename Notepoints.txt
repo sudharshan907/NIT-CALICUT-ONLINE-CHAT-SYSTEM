@@ -2,17 +2,13 @@ CHAT SYSTEM context:
 
 Notepoints:
 
-*Put this in resume as project and upload in GitHub as a seperate file also along with report after lab evaluation procedure.
-
-*Honestly speaking i didnot write the code from scratch.Used snr submission programs and customised it a lot in my style and understood every line of code.
-
-*Whole basic  idea of 1st q is based on fact that if a client sent a msg to server then server can send that msg to all clients which are connected to it saying the source client name using clientlist[] socket values.basic system design idea -driving force of making this project technically.
+*Whole basic  idea of this chat system implementation is based on fact that if a client sent a msg to server then server can send that msg to all clients which are connected to it saying the source client name using clientlist[] datastructure storing all connected socket values.basic system design idea -driving force of making this project technically.
 
 *This functionality resembles whatsaap grp functionality with some limited features of course.whatsaap also in initial stages has limited features and bcz of he intellectual software engineers managing it and updating it/adding new features continously made it look more advanced now.
 
 *Refer comments in code for more info.if two threads are acting on same data item,then there must be synchronisation so must use mutexes.
 
-*Best way to debug isocket programs is to print all send,recv function calls buffers.(powerful tool)
+*Best way to debug isocket programs is to print all send,recv function calls buffers after sent/received.(powerful tool)
 
 *Update of putting a password for server is actually present inside server and client codes but commented.
 
@@ -20,7 +16,7 @@ Notepoints:
 
 *seperate thread for Every new client is required bcz server don't know when a particular client will send msg to it.so we have to put recv(sockfd);  for all clients continously in server and this is possible only with threads.all threads will correspondingly wait for every client to send the msg.(there might be other possibility also I don't know but I knew threads will make this mutiple listenin possible).
 
-*We have to use mutexes carefully,otherwise there can be a deadlock.we have to be so careful about deadlocks.and managing mutexes otherwise undefined behaviour will happen ij programs due to race conditions/deadlocks.keep in mind that threads will run parallelly so one thread can execute first and another thread later etc.dont think this is undefined behaviour.
+*We have to use mutexes carefully,otherwise there can be a deadlock.we have to be so careful about deadlocks.and managing mutexes otherwise undefined behaviour will happen in programs due to race conditions/deadlocks.keep in mind that threads will run parallelly so one thread can execute first and another thread later etc.dont think this is undefined behaviour.
 
 *thread_join is not actually joining,saying original process to wait until all joined threads stops execution.
 
@@ -30,15 +26,17 @@ Notepoints:
 
 *Since server runs continously,no need of join statements in server program as of in client program.actually sever can be stopped only using ctrl+c.which is not that crct.
 
+*Honestly speaking i didnot write the code from scratch.Used snr submission programs and customised it a lot in my style and understood every line of code,every line purpose etc.
+
 *We might think that in client program two threads are not required.but required bcz we don't know when we will receive msgs or when we will send msgs.having two threads for this is a must in client.we can also put these 2 sender & receiver threads in client program in ass3 1st q,but not necessary and waste of time bcz there in ass3 1st q we exactly knows when we will receive msgs and when we have to send msgs.
 
 *wherever two threads/processes acting/modifying on same data i used mutex locking.make sure to lock every where(search the common data,variables in editor and deal all of them must) otherwise in some program runs it can work fine and in another runs it will not work fine,due to race conditions.
 
-*For the client which entered after maxlimit is reached,the client program will run another iteration of sender thread bcz already it entered into iteration even though aliveflag now became zero.so sender thread will perform one extra iteration-not a big problem.i dont know hoe to fix this.neglected it bcz a very small problem.
+*For the client which entered after maxlimit is reached,the client program will run another iteration of sender thread bcz already it entered into iteration even though aliveflag now became zero.so sender thread will perform one extra iteration-not a big problem.i dont know how to fix this.neglected it bcz a very small problem.
 
 *New points apart from ass3 programs:
 
-1)pthread library, different command to compile,mutex data type(pthread_mutex_t),initialisation macro,thread Id data type(pthread_t),creating threads (making a thread from a single fn with at most 1 argument,type casting arguments),pthread_create(),pthread_join(),mutex_lock(),mutex_unlock() fn's,[pthread_detach(pthread_self) in server code].
+1)pthread library, different command to compile,mutex data type(pthread_mutex_t),initialisation macro,thread Id data type(pthread_t),creating threads (making a thread from a single fn with at most 1 argument,type casting arguments inside it),pthread_create(),pthread_join(),mutex_lock(),mutex_unlock() fn's,[pthread_detach(pthread_self) in server code].
 
 2)if multiple threads/processes have access to common data members,lock them whenever modifying that variable, carefully watch all common data members everywhere and lock all of them.seperate mutex variables for seperate common data items is better reduces some time wastage.
 
