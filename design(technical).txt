@@ -54,7 +54,6 @@ else take this client name and received msg and sentoall() and print in server t
 }
 }
 
-
 2)client code design:(Abstract of whole client code here without syntaxes)
 importing all libraries
 global data items: aliveflag,sockfd variable,one mutex-why this mutex-refer notepoints below
@@ -85,7 +84,6 @@ else print directly that msg received on screen
 }
 }
 }
-
 
 B)Technical Notepoints:
 
@@ -123,8 +121,8 @@ C)Feature updates thought/some small bugs i detected while using chat system:
    5)Better to take client name as input if limits reached, and use that client name and pass it to all clients+server so that all clients will know exactly who is trying to connect-very small inconvenience to users(so left) or avoid taking client name before checking limit reached.
 
    6)If max_clients are 3 and first,second,third connected and first one exited the chat.if a new client is connected (fourth) then it is showing current members as only second,third name is not displaying for fourth connected client.
-  *a)any msgs from this 4th client is not going to third client. And any msg from third client is not going to 4th client.remaining everything is fine.(far fetched bug).something to do with clientlist[] array here.
-  *Simply if one client attempted to join and rejected by server(due to limit) and one member exited and now new member joined from now on not working properly.something error with clientlist[] database here.
+   *a)any msgs from this 4th client is not going to third client. And any msg from third client is not going to 4th client.remaining everything is fine.(far fetched bug).something to do with clientlist[] array here.
+   *Simply if one client attempted to join and rejected by server(due to limit) and one member exited and now new member joined from now on not working properly.something error with clientlist[] database here.
   Solution:assigning index to client before adding it to database is not good and further bad thing is assigning current client count as index to new client is very bad,so assign index to client only after adding it to database(that index in database itself) i.e., assign index value to client not according to client_count at that time but according to its index in client[] array after adding to database.Then whole bug will be corrected.Didnot code this bcz if we change the code now then there is a chance that i have to check whole code again wheter i am affecting any other things or not.so not to waste time i didnot code this simple thing also.if this is updated crctly then complexity of deleteclient() will be reduced to O(1) bcz we can directky access index in database(client[]).
 
    7)it is better if we provide a functionality,to send the msg only to the required single client(one-one private communication) and not to the whole group.implementing this is not difficult,but takes time.
@@ -143,7 +141,4 @@ D)Small Doubts remained:
    3)If i try to remove all warnings(like changing warning lines appropriately) in server program compilation then when running again so much of undefined behaviour is happening.so don't remove warnings simply.Know the exact reason of warnings and handle them carefully dont simply change according to instrs in warnings.and run and confirm continously.if we compile server program we will get so many warnings but no errors in linux platform.
 
    4)What if we close the socketfd using close(sockfd) created in client using 2 threads?
-
-
-
 
