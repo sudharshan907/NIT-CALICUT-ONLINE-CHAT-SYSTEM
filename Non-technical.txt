@@ -47,3 +47,10 @@ C)Multithreading:
       In gaming almost every functionality should work on same memory space,so without multithreading heavy gaming applications would have never built even if built they require very powerful CPUs to run game smoothly bcz there should be seperate processes for every functionality.
 
     c)Increasing parallelism in cpu cores:A process(single threaded) can be run only in one processor even though many processors are available and even if  multiprogramming is used.so if we have multiple threads in a single process,we can assign threads to diff processors thereby increasing efficiency of cpus in multi-processor environment.(refer merge sort using multithreading gfg article).
+    Example:If there are 2 processors in CPU,we can make Mergesort() algorithm run in O(n) complexity itself instead of O(nlogn) complexity with same extra space but utilising 2 processors this time instead of one processor.
+    in ms() fn create 2 seperate threads for 2 recursive calls of ms(half),ms(half) and call merge() only if 2 threads completed their execution by using pthread.join() fn.Might think we need mutexes here to synchronise threads but it turned out that we dont need bcz even though 2 threads act on same array,they are acting on 2 independent different halfs of array,there is no element common b/w 2 threads.so no need of synchronisation here in this case.
+    Now T(n)=T(n/2)+k.n instead of T(n)=2*T(n/2)+k.n
+    Overall Time complexity:O(n) itself by Masters Theorom.
+    If there are more than 2 processors we can make use of all processors not only 2 processes(but coding it and getting idea where to create threads is complicated and can be done by after gaining some experience.
+    
+    
