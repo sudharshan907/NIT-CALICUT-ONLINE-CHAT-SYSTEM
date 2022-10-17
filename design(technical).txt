@@ -1,4 +1,28 @@
-A)Design of both server and client programs:
+A)Technical Notepoints:
+
+   1)Whole basic idea of this chat system implementation is based on fact that if a client sent a msg to server then server can send that msg to all clients which are connected to it mentioning the source client name using clientlist[] datastructure storing all connected socket values.basic system design idea -driving force of making this project technically.
+
+   2)Came to know that if we debug socket related programs by printing all send,recv function calls buffers after execution,this technique worked powerful to me.
+
+   3)new things needed to understand inorder to use multithreading------>different command to compile,pthread library,mutex data type(pthread_mutex_t),initialisation macro,thread Id data type(pthread_t),creating threads (making a thread from a single fn with at most 1 argument,type casting arguments inside it),pthread_create(),pthread_join(),mutex_lock(),mutex_unlock() fn's,pthread_detach-pthread_self(in server code).
+
+   4)if multiple threads/processes have access to common data members,lock them whenever modifying that variable(no need to lock if only reading),carefully watch all common data members everywhere and lock all of them.otherwise undefined behaviour will happen and will lead to race conditions like working crctly in some runs and not working correctly in other runs or can even lead to deadlocks too sometimes.keep in mind that threads will run parallelly so one thread can execute first and another thread later etc,dont think this is undefined behaviour.search the common data,variables in editor and deal all of them must.
+
+   5)If threads only reading common data,then mutexes are required?(no)reading is not a problem-Read-Read is not a problem.only if involved modifying/write() common data then mutexes are required.
+
+   6)For different data items using different mutex variables is better so that we can reduce some time wastage.we can also use same mutex for every common data but it can consume some time and in some cases may lead to deadlock/starvation also.
+
+   7)Better to pass arguments to thread fn using pass by value,dont pass pointers,avoid thread to use the common memory again.or else copy that argument inside thread to other memory specific to that thread.if not done,we have to use mutexes again bcz thread is accessing data in parent process.(common data again which is an extra headache).
+
+   8)seperate thread for Every new client inside sever is required bcz server don't know when a particular client will send msg to it.so we have to put recv(sockfd);  for all clients continously in server and this is possible only with threads.all threads will correspondingly wait for every client to send the msg.(there might be other possibility also I don't know but I knew threads will make this mutiple listening possible).so at any time if cliets connected are x there will be (x+1) threads(one extra bcz server process is itself again a thread)
+
+   9)Might think no use of mutex in client code bcz of the fact that two threads have different memory.msg[] is there twice.and not working on common data.and sockfd variable only reading-no modifying.but I added aliveflag.which is a common data and can be modified so must use mutex for that alive flag.Aliveflag is imp bcz receiver should also stop automatically once sender is stopped.or sender should stop once receiver is stopped.
+
+   10)We might think that in client program two threads(sender and receiver) are not required but required bcz we don't know when we will receive msgs or when we will send msgs.so we must wait on one scanf()(send() later) and one recv() and for this having two threads for this is a must in client.we can also put these 2 sender & receiver threads in client program in ass3 1st q,but not necessary and waste of time bcz there in ass3 1st q we exactly know when we will receive msgs and when we have to send msgs.
+   
+   
+   
+B)Design of both server and client programs:
 1)server code design:(Abstract of whole code here without syntaxes)
 importing all libraries
 struct client{ index,sockid,name }
@@ -84,28 +108,6 @@ else print directly that msg received on screen
 }
 }
 }
-
-B)Technical Notepoints:
-
-   1)Whole basic idea of this chat system implementation is based on fact that if a client sent a msg to server then server can send that msg to all clients which are connected to it mentioning the source client name using clientlist[] datastructure storing all connected socket values.basic system design idea -driving force of making this project technically.
-
-   2)Came to know that if we debug socket related programs by printing all send,recv function calls buffers after execution,this technique worked powerful to me.
-
-   3)new things needed to understand inorder to use multithreading------>different command to compile,pthread library,mutex data type(pthread_mutex_t),initialisation macro,thread Id data type(pthread_t),creating threads (making a thread from a single fn with at most 1 argument,type casting arguments inside it),pthread_create(),pthread_join(),mutex_lock(),mutex_unlock() fn's,pthread_detach-pthread_self(in server code).
-
-   4)if multiple threads/processes have access to common data members,lock them whenever modifying that variable(no need to lock if only reading),carefully watch all common data members everywhere and lock all of them.otherwise undefined behaviour will happen and will lead to race conditions like working crctly in some runs and not working correctly in other runs or can even lead to deadlocks too sometimes.keep in mind that threads will run parallelly so one thread can execute first and another thread later etc,dont think this is undefined behaviour.search the common data,variables in editor and deal all of them must.
-
-   5)If threads only reading common data,then mutexes are required?(no)reading is not a problem-Read-Read is not a problem.only if involved modifying/write() common data then mutexes are required.
-
-   6)For different data items using different mutex variables is better so that we can reduce some time wastage.we can also use same mutex for every common data but it can consume some time and in some cases may lead to deadlock/starvation also.
-
-   7)Better to pass arguments to thread fn using pass by value,dont pass pointers,avoid thread to use the common memory again.or else copy that argument inside thread to other memory specific to that thread.if not done,we have to use mutexes again bcz thread is accessing data in parent process.(common data again which is an extra headache).
-
-   8)seperate thread for Every new client inside sever is required bcz server don't know when a particular client will send msg to it.so we have to put recv(sockfd);  for all clients continously in server and this is possible only with threads.all threads will correspondingly wait for every client to send the msg.(there might be other possibility also I don't know but I knew threads will make this mutiple listening possible).so at any time if cliets connected are x there will be (x+1) threads(one extra bcz server process is itself again a thread)
-
-   9)Might think no use of mutex in client code bcz of the fact that two threads have different memory.msg[] is there twice.and not working on common data.and sockfd variable only reading-no modifying.but I added aliveflag.which is a common data and can be modified so must use mutex for that alive flag.Aliveflag is imp bcz receiver should also stop automatically once sender is stopped.or sender should stop once receiver is stopped.
-
-   10)We might think that in client program two threads(sender and receiver) are not required but required bcz we don't know when we will receive msgs or when we will send msgs.so we must wait on one scanf()(send() later) and one recv() and for this having two threads for this is a must in client.we can also put these 2 sender & receiver threads in client program in ass3 1st q,but not necessary and waste of time bcz there in ass3 1st q we exactly know when we will receive msgs and when we have to send msgs.
 
 
 C)Feature updates thought/some small bugs i detected while using chat system:
