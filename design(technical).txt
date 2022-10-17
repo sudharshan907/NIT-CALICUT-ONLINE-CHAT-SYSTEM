@@ -22,74 +22,74 @@ A)Technical Notepoints:
    
    
 B)Design of both server and client programs:
-1)server code design:(Abstract of whole code here without syntaxes)
-importing all libraries
-struct client{ index,sockid,name }
-global data items:2 mutexes(m1,m2),client[256]--array of pointers to client structures,array[256] of thread(pthread_t)
-main(){   }
-addclient(){    }
-deleteclient(){   }
-sendtoallclients(){   }
-clientthread(){     }
+   1)server code design:(Abstract of whole code here without syntaxes)
+   importing all libraries
+   struct client{ index,sockid,name }
+   global data items:2 mutexes(m1,m2),client[256]--array of pointers to client structures,array[256] of thread(pthread_t)
+   main(){   }
+   addclient(){    }
+   deleteclient(){   }
+   sendtoallclients(){   }
+   clientthread(){     }
 
-main(){
-create server socket,bind to ip and port,take max students at a time
-go to listen state
-while(){
-accept connection from client
-here verifying password feature(commented it-refer code if want)
-if limit is crossed,send limitreached msg to client,decrement count
-print one student attempted msg and using sendtoall() send to all current clients this same msg
-else receive name of client,take sockid and assign some index and add this triplet into database(client[256]) using addclient() fn
-create a new thread to handle this specific client of clientthread fn(pass client structure as argument),store this thread id in thread[] array
-new thread will take care of this specific cleint,server process loops and waits to accept further connections
-}
-//no joining of threads here,bcz server process will not stop,can be stopped using ctrl+c only.not a smooth thing to do
-}
+   main(){
+   create server socket,bind to ip and port,take max students at a time
+   go to listen state
+   while(){
+   accept connection from client
+   here verifying password feature(commented it-refer code if want)
+   if limit is crossed,send limitreached msg to client,decrement count
+   print one student attempted msg and using sendtoall() send to all current clients this same msg
+   else receive name of client,take sockid and assign some index and add this triplet into database(client[256]) using addclient() fn
+   create a new thread to handle this specific client of clientthread fn(pass client structure as argument),store this thread id in thread[] array
+   new thread will take care of this specific cleint,server process loops and waits to accept further connections
+   }
+   //no joining of threads here,bcz server process will not stop,can be stopped using ctrl+c only.not a smooth thing to do
+   }
 
-addclient(){
-takes pointer to structure of new client(index,sockid,name) as argument
-traverse database(client[256]-array of pointers to client structure)
-if any pointer is null,assign to it 
-if all pointers are filled,didnot handle this case
-}
+   addclient(){
+   takes pointer to structure of new client(index,sockid,name) as argument
+   traverse database(client[256]-array of pointers to client structure)
+   if any pointer is null,assign to it 
+   if all pointers are filled,didnot handle this case
+   }
 
-deleteclient(){
-takes index value of client to be deleted as argument(this index value is not index in client[] database,index assigned to this client after accepting connection)
-traverse database and see which client has above index value and make it point to null
-}
+   deleteclient(){
+   takes index value of client to be deleted as argument(this index value is not index in client[] database,index assigned to this client after accepting        connection)
+   traverse database and see which client has above index value and make it point to null
+   }
 
-sendtoallclients(){
-takes msg and index of client(k) as arguments
-sends to all clients in database using sockid values inside structure array,except for client with index k
-bcz client with index k only put msg to all other clients
-}
+   sendtoallclients(){
+   takes msg and index of client(k) as arguments
+   sends to all clients in database using sockid values inside structure array,except for client with index k
+   bcz client with index k only put msg to all other clients
+   }
 
-clientthread(){
-takes specific client structure as argument,handles only this specific client
-if he is the only client connected currently(detect using client_count value),print no members currently
-else send current members list to only this client using names of clients present in client database
-print that this client joined the discussion,and send this msg to all clients using sendtoall fn except for this client
-while(){
-wait on recv() fn only for this client
-if received exit msg,delete this client from database(client[]),decrement client_count,send msg of this client leaving to all other clients and print in server too,close the connection socket specific to this client,break loop,kill this thread
-else take this client name and received msg and sentoall() and print in server too,continue the loop,again wait on recv() fn
-}
-}
+   clientthread(){
+   takes specific client structure as argument,handles only this specific client
+   if he is the only client connected currently(detect using client_count value),print no members currently
+   else send current members list to only this client using names of clients present in client database
+   print that this client joined the discussion,and send this msg to all clients using sendtoall fn except for this client
+   while(){
+   wait on recv() fn only for this client
+   if received exit msg,delete this client from database(client[]),decrement client_count,send msg of this client leaving to all other clients and print in      server too,close the connection socket specific to this client,break loop,kill this thread
+   else take this client name and received msg and sentoall() and print in server too,continue the loop,again wait on recv() fn
+   }
+   }
 
-2)client code design:(Abstract of whole client code here without syntaxes)
-importing all libraries
-global data items: aliveflag,sockfd variable,one mutex-why this mutex-refer notepoints below
-void sender thread(){    }
-void receiver thread(){   }
-void main(){     }
-main(){
-create socket,no binding here(bcz client process)
-connect to server ip and server port number using connect()
-take client name and send name to server
-create sender thread of sender fn and receiver thread of receiver fn
-join 2 threads so that process will not terminate until both threads terminates(are 2 threads necessary?yes-refer notepoints below)
-}
+   2)client code design:(Abstract of whole client code here without syntaxes)
+   importing all libraries
+   global data items: aliveflag,sockfd variable,one mutex-why this mutex-refer notepoints below
+   void sender thread(){    }
+   void receiver thread(){   }
+   void main(){     }
+   main(){
+   create socket,no binding here(bcz client process)
+   connect to server ip and server port number using connect()
+   take client name and send name to server
+   create sender thread of sender fn and receiver thread of receiver fn
+   join 2 threads so that process will not terminate until both threads terminates(are 2 threads necessary?yes-refer notepoints below)
+   }
 
 sender(){
 while(aliveflag){
