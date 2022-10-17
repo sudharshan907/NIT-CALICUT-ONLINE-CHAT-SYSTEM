@@ -91,22 +91,22 @@ B)Design of both server and client programs:
    join 2 threads so that process will not terminate until both threads terminates(are 2 threads necessary?yes-refer notepoints below)
    }
 
-sender(){
-while(aliveflag){
-will wait on scanf
-if eneterd anything will send to server
-if entered exit,make aliveflag=0 and close connection
-     }
-}
+   sender(){
+   while(aliveflag){
+   will wait on scanf
+   if eneterd anything will send to server
+   if entered exit,make aliveflag=0 and close connection
+   }
+   }
 
-receiver(){
-while(aliveflag){
-if(recv()>0){ //will wait on recv() from server
-if msg received is limitreached,make aliveflag=0,close connection,print limit reached and server rejected msg
-else print directly that msg received on screen
-}
-}
-}
+   receiver(){
+   while(aliveflag){
+   if(recv()>0){ //will wait on recv() from server
+   if msg received is limitreached,make aliveflag=0,close connection,print limit reached and server rejected msg
+   else print directly that msg received on screen
+   }
+   }
+   }
 
 
 C)Feature updates thought/some small bugs i detected while using chat system:
