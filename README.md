@@ -4,5 +4,7 @@ Developed a simple online chat system which facilitates students to connect by s
 
 Refer usermanual and report pdf to get clear understanding about how the chat system works and functionalities facilitated by the chat system.
 
+For Revision refer both Technical.txt and Non
+
 Thank You.
 
