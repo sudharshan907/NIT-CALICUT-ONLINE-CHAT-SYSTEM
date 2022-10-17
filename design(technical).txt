@@ -21,7 +21,6 @@ A)Technical Notepoints:
    10)We might think that in client program two threads(sender and receiver) are not required but required bcz we don't know when we will receive msgs or when we will send msgs.so we must wait on one scanf()(send() later) and one recv() and for this having two threads for this is a must in client.we can also put these 2 sender & receiver threads in client program in ass3 1st q,but not necessary and waste of time bcz there in ass3 1st q we exactly know when we will receive msgs and when we have to send msgs.
    
    
-   
 B)Design of both server and client programs:
 1)server code design:(Abstract of whole code here without syntaxes)
 importing all libraries
