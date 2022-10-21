@@ -22,38 +22,38 @@ A)Technical Notepoints:
    
    
 B)Libraries used
+
    1)socket related syntaxes in C
    
-   #include<sys/socket.h>
-   #include<sys/types.h>
+      #include<sys/socket.h>
+      #include<sys/types.h>
+      general purpose fns for both client and server : send(sockid,buff,sizeof(buff),0);    recv(sockid,buff,sizeof(buff),0);     close(sockid);
+      
+      server specific fns:  
+      int ss=socket(AF_INET(ipv4),SOCK_STREAM(tcp),0);
+      fill ip address and port value in server address structure
+      listen(ss,5);
+      bind(ss,server address structure saddr,sizeof(saddr));
+      int sockid=accept(ss,null,null);
    
-   general purpose fns for both client and server : send(sockid,buff,sizeof(buff),0);    recv(sockid,buff,sizeof(buff),0);     close(sockid);
-   server specific fns:  
-   int ss=socket(AF_INET(ipv4),SOCK_STREAM(tcp),0);
-   fill ip address and port value in server address structure
-   listen(ss,5);
-   bind(ss,server address structure saddr,sizeof(saddr));
-   int sockid=accept(ss,null,null);
-   
-   client specific fns:
-   sockid=socket(AF_INET,SOCK_STREAM,0);
-   fill ip address and port value of server in server address structure(in client also server details only should be there)
-   int cn=connect(sockid,server address structure saddr,sizeof(addr));
-   
+      client specific fns:
+      sockid=socket(AF_INET,SOCK_STREAM,0);
+      fill ip address and port value of server in server address structure(in client also server details only should be there)
+      int cn=connect(sockid,server address structure saddr,sizeof(addr));
+    
    2)thread related
-   #include<pthread.h>
-   pthread_mutex_t=MUTEX INITIALIZER MACRO;
-   pthread_mutex_lock(&m);
-   pthread_mutex_unlock(&m);
-   pthread_detach(pthread_self());
    
-   pthread_t thvar;
-   Thread fn: void* fname(void* fn args)  (fn args=just variable names)
-   pthread_create(&thvar,null,&fnname,(void*) fn args)
-   pthread_join(thvar,0);
+      #include<pthread.h>
+      pthread_mutex_t=MUTEX INITIALIZER MACRO;
+      pthread_mutex_lock(&m);
+      pthread_mutex_unlock(&m);
+      pthread_detach(pthread_self());
    
-   
-   
+      pthread_t thvar;
+      Thread fn: void* fname(void* fn args)  (fn args=just variable names)
+      pthread_create(&thvar,null,&fnname,(void*) fn args)
+      pthread_join(thvar,0);
+      
    
 C)Design of both server and client programs:
    1)server code design:(Abstract of whole code here without syntaxes)
